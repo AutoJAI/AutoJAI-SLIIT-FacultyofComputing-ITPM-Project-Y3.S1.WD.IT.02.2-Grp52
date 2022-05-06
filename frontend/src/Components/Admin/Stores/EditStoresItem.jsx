@@ -163,7 +163,7 @@ class EditStoresItem extends Component {
               <div className="dropdown">
                 <Link to="/add-purchase-item">
                   <button className="dropbtn">
-                    <i className="fa fa-plus-circle" /> Purchase Items
+                    <i className="fa fa-plus-circle" /> Purchased Items
                   </button>
                 </Link>
               </div>
