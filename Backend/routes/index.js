@@ -4,7 +4,9 @@ const PurchaseMainRoute = require("./PurchaseRoutes");
 
 
 
+
 routes.use("/stores", StoresMainRoute);
+
 
 routes.use("/purchase", PurchaseMainRoute);
 

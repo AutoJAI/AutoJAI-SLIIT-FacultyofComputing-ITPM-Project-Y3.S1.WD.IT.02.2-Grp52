@@ -1016,6 +1016,16 @@ button.submit-contact:hover {
   min-height: 630px;
 }
 
+.main-banner-15 {
+  background: url(../images/JAIEmp3.jpg) no-repeat center;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -ms-background-size: cover;
+  min-height: 630px;
+}
+
 /* page details */
 .breadcrumb-agile {
   box-shadow: 2px 3px 12px 1px rgba(0, 0, 0, 0.15);
