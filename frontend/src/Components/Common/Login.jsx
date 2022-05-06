@@ -34,6 +34,13 @@ class Login extends Component {
     console.log("customer_password", login.customer_password);
 
     
+    if (
+      login.customer_email === "adminstores@gmail.com" &&
+      login.customer_password === "1234"
+    ) {
+      this.props.history.push("/stores-dash");
+      toast.success("Admin is logged.");
+    }
     
     
     if (
