@@ -50,6 +50,14 @@ class Login extends Component {
       this.props.history.push("/services-dash");
       toast.success("Admin is logged.");
     }
+
+    if (
+      login.customer_email === "adminemployee@gmail.com" &&
+      login.customer_password === "1234"
+    ) {
+      this.props.history.push("/employee-dash");
+      toast.success("Admin is logged.");
+    }
     
      else {
       axios.post(`${APIURL}/customer/login-customer`, login).then((res) => {
