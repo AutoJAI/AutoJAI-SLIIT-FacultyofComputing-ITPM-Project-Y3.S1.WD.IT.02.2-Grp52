@@ -6,7 +6,15 @@ import "react-toastify/dist/ReactToastify.css";
 import Home from "./Components/Common/Home";
 
 import Login from "./Components/Common/Login";
+import ActivationEmail from "./Components/Common/ActivationEmail";
 
+
+
+
+import StoresDash from "./Components/Admin/Stores/Stores";
+import AddStoreItem from "./Components/Admin/Stores/AddStoreItem";
+import GetAllStoresItem from "./Components/Admin/Stores/GetAllStoresItem";
+import EditStoresItem from "./Components/Admin/Stores/EditStoresItem";
 
 
 
@@ -29,6 +37,27 @@ function App() {
           <Route path="/" exact component={Home} />
          
           <Route path="/login" exact component={Login} />
+          <Route
+            path="/customer/activate/:activation_token"
+            component={ActivationEmail}
+            exact
+          />
+           
+          
+
+           {/* Stores Routes */}
+           <Route path="/stores-dash" exact component={StoresDash} />
+          <Route path="/add-stores-item" exact component={AddStoreItem} />
+          <Route
+            path="/get-all-stores-item"
+            exact
+            component={GetAllStoresItem}
+          />
+          <Route
+            path="/edit-stores-item/:id"
+            exact
+            component={EditStoresItem}
+          />
          
           
         </Switch>
