@@ -99,7 +99,7 @@ class AddStoreItem extends Component {
               </a>
             </li>
             <br />
-            <div className="sidebar-heading">Stores Management</div>
+            <div className="sidebar-heading">Store Management</div>
             <br />
             <li className="nav-item">
               <div className="dropdown">
