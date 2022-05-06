@@ -191,7 +191,7 @@ class Login extends Component {
                   </p>
                   <p className="account-w3ls text-center text-da">
                     Don't have an account?
-                    <a href="/register">Create one now</a>
+                    <a href="/register">Create new one now</a>
                   </p>
                 </form>
               </div>
