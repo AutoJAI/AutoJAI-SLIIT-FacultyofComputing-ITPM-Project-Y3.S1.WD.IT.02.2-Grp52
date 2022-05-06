@@ -16,10 +16,8 @@ import AddStoreItem from "./Components/Admin/Stores/AddStoreItem";
 import GetAllStoresItem from "./Components/Admin/Stores/GetAllStoresItem";
 import EditStoresItem from "./Components/Admin/Stores/EditStoresItem";
 
-import EmployeeDash from "./Components/Admin/Employee/Employee";
-import AddEmployee from "./Components/Admin/Employee/AddEmployee";
-import GetAllEmployee from "./Components/Admin/Employee/GetAllEmployee";
-import EditEmployee from "./Components/Admin/Employee/EditEmployee";
+
+import AddPurchaseItem from "./Components/Admin/Stores/AddPurchaseItem";
 
 
 
@@ -64,15 +62,11 @@ function App() {
             component={EditStoresItem}
           />
 
-           {/* Employee Routes */}
-           <Route path="/employee-dash" exact component={EmployeeDash} />
-          <Route path="/add-new-employee" exact component={AddEmployee} />
-          <Route path="/get-all-employee" exact component={GetAllEmployee} />
-          <Route
-            path="/get-emploee-dtails-by-id/:id"
-            exact
-            component={EditEmployee}
-            />
+
+           {/* Purchase Routes */}
+           <Route path="/add-purchase-item" exact component={AddPurchaseItem} />
+
+           
          
           
         </Switch>

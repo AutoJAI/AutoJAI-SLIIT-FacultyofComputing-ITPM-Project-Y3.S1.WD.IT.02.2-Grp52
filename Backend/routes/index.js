@@ -1,9 +1,13 @@
 const routes = require("express").Router();
 const StoresMainRoute = require("./StoresRoutes");
-const EmployeeMainRoute = require("./EmployeeRoutes");
+const PurchaseMainRoute = require("./PurchaseRoutes");
+
+
 
 
 routes.use("/stores", StoresMainRoute);
-routes.use("/employee", EmployeeMainRoute);
+
+
+routes.use("/purchase", PurchaseMainRoute);
 
 module.exports = routes;

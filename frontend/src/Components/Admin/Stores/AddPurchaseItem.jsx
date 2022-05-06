@@ -7,106 +7,62 @@ import { APIURL } from "../../API/environment";
 import Logo from "../../../assets/images/logo.png";
 
 const initialState = {
-  item_id: "",
-  item_name: "",
-  item_brand: "",
-  item_status: "",
-  item_price: "",
-  image: null,
+  purchase_id: "",
+  purchase_item_name: "",
+  supplier: "",
+  item_type: "",
+  item_add_date: "",
+  item_qnty: "",
+  purchased_price: "",
+  total_item_price: "",
 };
 
-class EditStoresItem extends Component {
+class AddPurchaseItem extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      initialState,
-      storesDetails: [],
-    };
+    this.state = initialState;
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onFileChange = this.onFileChange.bind(this);
-    this.onDelete = this.onDelete.bind(this);
+    this.onCalculate = this.onCalculate.bind(this);
   }
-
-  onFileChange = (event) => {
-    this.setState({ image: event.target.files[0] });
-  };
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  async componentDidMount() {
-    await axios
-      .get(`${APIURL}/stores/get-stores-details/${this.props.match.params.id}`)
-      .then((res) => {
-        this.setState({ storesDetails: res.data.StoresScheduleDetails });
-        console.log("storesDetails", this.state.storesDetails);
-
-        this.setState({
-          item_id: this.state.storesDetails.item_id,
-        });
-        this.setState({
-          item_name: this.state.storesDetails.item_name,
-        });
-        this.setState({
-          item_brand: this.state.storesDetails.item_brand,
-        });
-        this.setState({
-          item_status: this.state.storesDetails.item_status,
-        });
-        this.setState({
-          item_price: this.state.storesDetails.item_price,
-        });
-        this.setState({
-          image: this.state.storesDetails.store_url,
-        });
-      });
-  }
-
   onSubmit(event) {
     event.preventDefault();
 
-    const formData = new FormData();
-
-    formData.append("image", this.state.image);
-    formData.append("item_id", this.state.item_id);
-    formData.append("item_name", this.state.item_name);
-    formData.append("item_brand", this.state.item_brand);
-    formData.append("item_status", this.state.item_status);
-    formData.append("item_price", this.state.item_price);
+    let PurchaseDetails = {
+      purchase_id: this.state.purchase_id,
+      purchase_item_name: this.state.purchase_item_name,
+      supplier: this.state.supplier,
+      item_type: this.state.item_type,
+      item_add_date: this.state.item_add_date,
+      item_qnty: this.state.item_qnty,
+      purchased_price: this.state.purchased_price,
+      total_item_price: this.state.total_item_price,
+    };
 
     axios
-      .put(
-        `${APIURL}/stores/update-schedule-details/${this.props.match.params.id}`,
-        formData
-      )
+      .post(`${APIURL}/purchase/add-purchase-details`, PurchaseDetails)
       .then((res) => {
         console.log("res", res);
 
         if (res.data.code === 200) {
           toast.success(res.data.message);
-          this.props.history.push("/get-all-stores-item");
+          window.location.reload();
+          
         } else {
           toast.error(res.data.message);
         }
       });
   }
 
-  onDelete(event) {
-    event.preventDefault();
-
-    axios
-      .delete(`${APIURL}/stores/delete-schedule/${this.props.match.params.id}`)
-      .then((res) => {
-        console.log("res", res);
-        if (res.data.code === 200) {
-          toast.success(res.data.message);
-          this.props.history.push("/get-all-stores-item");
-        } else {
-          toast.error(res.data.message);
-        }
-      });
+  onCalculate(event) {
+    this.setState({
+      total_item_price: this.state.item_qnty * this.state.purchased_price,
+    });
   }
 
   render() {
@@ -163,7 +119,7 @@ class EditStoresItem extends Component {
               <div className="dropdown">
                 <Link to="/add-purchase-item">
                   <button className="dropbtn">
-                    <i className="fa fa-plus-circle" /> Purchased Items
+                    <i className="fa fa-plus-circle" /> Purchase Items
                   </button>
                 </Link>
               </div>
@@ -180,12 +136,16 @@ class EditStoresItem extends Component {
             </li>
             <br />
             </ul>
+            
       
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">
               <nav className="navbar navbar-expand topbar mb-4 static-top">
-                <h1 className="h3 mb-2 text-gray-800">Edit Spare Item Parts Details{" "}</h1>
+                <h1 className="h3 mb-2 text-gray-800">
+                  Newly Purchased Item Record Add
+                </h1>
                 <ul className="navbar-nav ml-auto">
+                  {/* Nav Item - User Information */}
                   <li className="nav-item dropdown no-arrow">
                     <a
                       className="nav-link dropdown-toggle"
@@ -246,12 +206,8 @@ class EditStoresItem extends Component {
                             <div className="col-lg-6">
                               <div className="p-5">
                                 <div className="text-center">
-                                  <h1
-                                    className="h4 text-gray-900 mb-4"
-                                    style={{ fontStyle: "italic" }}
-                                  >
-                                    Edit {this.state.storesDetails.item_name}'s
-                                    Details
+                                  <h1 className="h4 text-gray-900 mb-4">
+                                    New Purchased Item Details
                                   </h1>
                                 </div>
                                 <form
@@ -260,115 +216,115 @@ class EditStoresItem extends Component {
                                   method="post"
                                 >
                                   <div className="form-group">
-                                    <label>Item Id</label>
+                                    <label>Purchase Id</label>
                                     <input
                                       type="text"
-                                      required="required"
-                                      name="item_id"
-                                      value={this.state.item_id}
-                                      placeholder="SPI-000"
+                                      name="purchase_id"
+                                      value={this.state.purchase_id}
+                                      placeholder="PI-000"
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label>Purchased Item Name</label>
+                                    <input
+                                      type="text"
+                                      name="purchase_item_name"
+                                      value={this.state.purchase_item_name}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label>Supplier</label>
+                                    <input
+                                      type="text"
+                                      name="supplier"
+                                      value={this.state.supplier}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Item Type</label>
+                                    <select
+                                      className="form-control "
+                                      style={{ borderRadius: 25, height: 50 }}
+                                      name="item_type"
+                                      value={this.state.item_type}
+                                      onChange={this.onChange}
+                                    >
+                                      <option>Select Type</option>
+                                      <option value="Brandnew">Brand New</option>
+                                      <option value="Used">
+                                        Used
+                                      </option>
+                                    </select>
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Added Date</label>
+                                    <input
+                                      type="date"
+                                      name="item_add_date"
+                                      value={this.state.item_add_date}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Quantity</label>
+                                    <input
+                                      type="text"
+                                      name="item_qnty"
+                                      value={this.state.item_qnty}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Purchased Price (Rs.)</label>
+                                    <input
+                                      type="text"
+                                      name="purchased_price"
+                                      value={this.state.purchased_price}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary btn-user btn-block"
+                                    onClick={this.onCalculate}
+                                  >
+                                    Calculate Total
+                                  </button>
+                                  <br />
+
+                                  <div className="form-group">
+                                    <label>Total Price (Rs.)</label>
+                                    <input
+                                      type="text"
+                                      name="total_item_price"
+                                      value={this.state.total_item_price}
                                       onChange={this.onChange}
                                       readOnly
                                       className="form-control form-control-user"
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <label>Item Name</label>
-                                    <input
-                                      type="text"
-                                      required="required"
-                                      pattern="^[A-Za-zÀ-ÿ ,.'-]+$"
-                                      name="item_name"
-                                      value={this.state.item_name}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Item Brand</label>
-                                    <input
-                                      type="text"
-                                      required="required"
-                                      name="item_brand"
-                                      value={this.state.item_brand}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <label>Item Status</label>
-                                    <input
-                                      type="text"
-                                      required="required"
-                                      name="item_status"
-                                      value={this.state.item_status}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Item Price (Rs.)</label>
-                                    <input
-                                      type="text"
-                                      required="required"
-                                      pattern="[0-9]*"
-                                      name="item_price"
-                                      value={this.state.item_price}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Images</label>
-                                    <input
-                                      type="file"
-                                      name="image"
-                                      accept="image/*"
-                                      onChange={this.onFileChange}
-                                      className=" images-upload"
-                                      required
                                     />
                                   </div>
 
                                   <button
                                     type="submit"
                                     className="btn btn-primary btn-user btn-block"
-                                    style={{ fontSize: 15 }}
                                   >
-                                    Update Records
+                                    Add Purchased Item to Store
                                   </button>
                                 </form>
-
-                                <br/>
-                                <button
-                                  type="submit"
-                                  className="btn btn-danger btn-user btn-block"
-                                  style={{
-                                    borderRadius: 25,
-                                    height: 40,
-                                    marginTop: -15,
-                                  }}
-                                  onClick={this.onDelete}
-                                >
-                                  Delete Records
-                                </button>
-
-                                <Link to="/get-all-stores-item">
-                                  <button
-                                    type="submit"
-                                    className="btn btn-success btn-user btn-block"
-                                    style={{
-                                      borderRadius: 25,
-                                      height: 40,
-                                      marginTop: 10,
-                                    }}
-                                  >
-                                    Cancel
-                                  </button>
-                                </Link>
                                 <hr />
                               </div>
                             </div>
@@ -441,4 +397,4 @@ class EditStoresItem extends Component {
     );
   }
 }
-export default EditStoresItem;
+export default AddPurchaseItem;
