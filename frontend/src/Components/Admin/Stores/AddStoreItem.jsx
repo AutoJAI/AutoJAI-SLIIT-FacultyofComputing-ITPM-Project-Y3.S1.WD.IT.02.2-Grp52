@@ -99,13 +99,23 @@ class AddStoreItem extends Component {
               </a>
             </li>
             <br />
-            <div className="sidebar-heading">Store Management</div>
+            <div className="sidebar-heading">Stores Management</div>
             <br />
             <li className="nav-item">
               <div className="dropdown">
                 <Link to="/add-stores-item">
                   <button className="dropbtn">
                     <i className="fa fa-plus-circle" /> New Spare Item Parts
+                  </button>
+                </Link>
+              </div>
+            </li>
+            <br />
+            <li className="nav-item">
+              <div className="dropdown">
+                <Link to="/add-purchase-item">
+                  <button className="dropbtn">
+                    <i className="fa fa-plus-circle" /> Purchase Items
                   </button>
                 </Link>
               </div>

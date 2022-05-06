@@ -73,6 +73,16 @@ class GetAllStoresItem extends Component {
             <br />
             <li className="nav-item">
               <div className="dropdown">
+                <Link to="/add-purchase-item">
+                  <button className="dropbtn">
+                    <i className="fa fa-plus-circle" /> Purchase Items
+                  </button>
+                </Link>
+              </div>
+            </li>
+            <br />
+            <li className="nav-item">
+              <div className="dropdown">
                 <Link to="/get-all-stores-item">
                   <button className="dropbtn">
                     <i className="fa fa-bars" /> Spare Item Parts List
