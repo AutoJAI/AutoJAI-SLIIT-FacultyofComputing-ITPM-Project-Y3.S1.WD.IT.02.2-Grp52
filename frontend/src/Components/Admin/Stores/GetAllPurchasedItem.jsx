@@ -15,7 +15,7 @@ class GetAllPurchasedItem extends Component {
 
   async componentDidMount() {
     await axios
-      .get(`${APIURL}/purchase/get-all-purchased-items`)
+      .get(`${APIURL}/purchase/get-all-purchased-details`)
       .then((response) => {
         this.setState({ purchaseList: response.data.PurchasedItemDetails });
         console.log("purchaseList =>", this.state.purchaseList);
