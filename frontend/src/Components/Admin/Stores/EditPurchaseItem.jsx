@@ -297,8 +297,8 @@ class EditPurchaseItem extends Component {
                                     <label>Purchased Item Name</label>
                                     <input
                                       type="text"
-                                      name="purchased_item_name"
-                                      value={this.state.purchased_item_name}
+                                      name="purchase_item_name"
+                                      value={this.state.purchase_item_name}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
                                     />
