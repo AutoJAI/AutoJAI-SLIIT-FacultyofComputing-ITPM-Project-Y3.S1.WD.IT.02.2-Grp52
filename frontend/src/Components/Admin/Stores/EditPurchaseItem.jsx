@@ -7,59 +7,119 @@ import { APIURL } from "../../API/environment";
 import Logo from "../../../assets/images/logo.png";
 
 const initialState = {
-  item_id: "",
-  item_name: "",
-  item_brand: "",
-  item_status: "",
-  item_price: "",
-  image: null,
+  purchase_id: "",
+  purchase_item_name: "",
+  supplier: "",
+  item_type: "",
+  item_add_date: "",
+  item_qnty: "",
+  purchased_price: "",
+  total_item_price: "",
 };
 
-class AddStoreItem extends Component {
+class EditPurchaseItem extends Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
+    this.state = {
+      initialState,
+      purchaseDetails: [],
+    };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onFileChange = this.onFileChange.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.onCalculate = this.onCalculate.bind(this);
   }
-
-  onFileChange = (event) => {
-    this.setState({ image: event.target.files[0] });
-  };
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  onCalculate(event) {
+    this.setState({
+      total_item_price: this.state.item_qnty * this.state.purchased_price,
+    });
+  }
+
+  async componentDidMount() {
+    await axios
+      .get(`${APIURL}/purchase/get-all-purchased-details/${this.props.match.params.id}`)
+      .then((res) => {
+        this.setState({ purchaseDetails: res.data.PurchasedItemDetails });
+        console.log("purchaseDetails", this.state.purchaseDetails);
+
+        this.setState({
+          purchase_id: this.state.purchaseDetails.purchase_id,
+        });
+        this.setState({
+          purchase_item_name: this.state.purchaseDetails.purchase_item_name,
+        });
+        this.setState({
+          supplier: this.state.purchaseDetails.supplier,
+        });
+        this.setState({
+            item_type: this.state.purchaseDetails.item_type,
+          });
+        this.setState({
+          item_add_date: this.state.purchaseDetails.item_add_date,
+        });
+        this.setState({
+          item_qnty: this.state.purchaseDetails.item_qnty,
+        });
+        this.setState({
+          purchased_price: this.state.purchaseDetails.purchased_price,
+        });
+        this.setState({
+          total_item_price: this.state.purchaseDetails.total_item_price,
+        });
+      });
+  }
+
   onSubmit(event) {
     event.preventDefault();
 
-    const formData = new FormData();
+    let PurchaseDetails = {
+      purchase_id: this.state.purchase_id,
+      purchase_item_name: this.state.purchase_item_name,
+      supplier: this.state.supplier,
+      item_type: this.state.item_type,
+      item_add_date: this.state.item_add_date,
+      item_qnty: this.state.item_qnty,
+      purchased_price: this.state.purchased_price,
+      total_item_price: this.state.total_item_price,
+    };
 
-    formData.append("image", this.state.image);
-    formData.append("item_id", this.state.item_id);
-    formData.append("item_name", this.state.item_name);
-    formData.append("item_brand", this.state.item_brand);
-    formData.append("item_status", this.state.item_status);
-    formData.append("item_price", this.state.item_price);
-
-    console.log("formData", formData);
     axios
-      .post(`${APIURL}/stores/add-stores-details`, formData)
+      .put(
+        `${APIURL}/purchase/update-purchase-details/${this.props.match.params.id}`,
+        PurchaseDetails
+      )
       .then((res) => {
         console.log("res", res);
 
         if (res.data.code === 200) {
           toast.success(res.data.message);
-          window.location.reload();
-          //this.props.history.push("/get-all-food-menu");
+          this.props.history.push("/get-all-purchased-items");
         } else {
           toast.error(res.data.message);
         }
       });
   }
 
+  onDelete(event) {
+    event.preventDefault();
+
+    axios
+      .delete(`${APIURL}/purchase/delete-purchase-item/${this.props.match.params.id}`)
+      .then((res) => {
+        console.log("res", res);
+        if (res.data.code === 200) {
+          toast.success(res.data.message);
+          this.props.history.push("/get-all-purchased-items");
+        } else {
+          toast.error(res.data.message);
+        }
+      });
+  }
 
   render() {
     return (
@@ -146,11 +206,8 @@ class AddStoreItem extends Component {
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">
               <nav className="navbar navbar-expand topbar mb-4 static-top">
-                <h1 className="h3 mb-2 text-gray-800">
-                  Newly Spare Item Parts Add
-                </h1>
+                <h1 className="h3 mb-2 text-gray-800">Edit Purchased Item Record</h1>
                 <ul className="navbar-nav ml-auto">
-                  {/* Nav Item - User Information */}
                   <li className="nav-item dropdown no-arrow">
                     <a
                       className="nav-link dropdown-toggle"
@@ -211,8 +268,12 @@ class AddStoreItem extends Component {
                             <div className="col-lg-6">
                               <div className="p-5">
                                 <div className="text-center">
-                                  <h1 className="h4 text-gray-900 mb-4">
-                                    New Spare Item Parts Details
+                                  <h1
+                                    className="h4 text-gray-900 mb-4"
+                                    style={{ fontStyle: "italic" }}
+                                  >
+                                    Edit {this.state.purchaseDetails.purchase_item_name}'s
+                                    Details
                                   </h1>
                                 </div>
                                 <form
@@ -221,84 +282,145 @@ class AddStoreItem extends Component {
                                   method="post"
                                 >
                                   <div className="form-group">
-                                    <label>Item Id</label>
+                                    <label>Purchase Id</label>
                                     <input
                                       type="text"
-                                      required="required"
-                                      name="item_id"
-                                      value={this.state.item_id}
-                                      placeholder="SPI-000"
+                                      name="purchase_id"
+                                      value={this.state.purchase_id}
+                                      placeholder="SI-000"
+                                      onChange={this.onChange}
+                                      readOnly
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label>Purchased Item Name</label>
+                                    <input
+                                      type="text"
+                                      name="purchased_item_name"
+                                      value={this.state.purchased_item_name}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
                                     />
                                   </div>
                                   <div className="form-group">
-                                    <label>Item Name</label>
+                                    <label>Supplier</label>
                                     <input
                                       type="text"
-                                      required="required"
-                                      pattern="^[A-Za-zÀ-ÿ ,.'-]+$"
-                                      name="item_name"
-                                      value={this.state.item_name}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <label>Item Brand</label>
-                                    <input
-                                      type="text"
-                                      required="required"
-                                      name="item_brand"
-                                      value={this.state.item_brand}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <label>Item Status</label>
-                                    <input
-                                      type="text"
-                                      required="required"
-                                      name="item_status"
-                                      value={this.state.item_status}
+                                      name="supplier"
+                                      value={this.state.supplier}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
                                     />
                                   </div>
 
                                   <div className="form-group">
-                                    <label>Item Price (Rs.)</label>
+                                    <label>Item Type</label>
+                                    <select
+                                      className="form-control "
+                                      style={{ borderRadius: 25, height: 50 }}
+                                      name="item_type"
+                                      value={this.state.item_type}
+                                      onChange={this.onChange}
+                                    >
+                                      <option>Select Type</option>
+                                      <option value="Brandnew">Brand New</option>
+                                      <option value="Used">
+                                        Used
+                                      </option>
+                                    </select>
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Added Date</label>
                                     <input
-                                      type="text"
-                                      name="item_price"
-                                      required="required"
-                                      pattern="[0-9]*"
-                                      value={this.state.item_price}
+                                      type="date"
+                                      name="item_add_date"
+                                      value={this.state.item_add_date}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
                                     />
                                   </div>
 
                                   <div className="form-group">
-                                    <label>Images</label>
+                                    <label>Quantity</label>
                                     <input
-                                      type="file"
-                                      name="image"
-                                      accept="image/*"
-                                      onChange={this.onFileChange}
-                                      className=" images-upload"
-                                      required
+                                      type="text"
+                                      name="item_qnty"
+                                      value={this.state.item_qnty}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Purchased Price (Rs.)</label>
+                                    <input
+                                      type="text"
+                                      name="purchased_price"
+                                      value={this.state.purchased_price}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
                                     />
                                   </div>
 
                                   <button
+                                    type="button"
+                                    className="btn btn-primary btn-user btn-block"
+                                    onClick={this.onCalculate}
+                                  >
+                                    Calculate Total
+                                  </button>
+                                  <br />
+
+                                  <div className="form-group">
+                                    <label>Total Price (Rs.)</label>
+                                    <input
+                                      type="text"
+                                      name="total_item_price"
+                                      value={this.state.total_item_price}
+                                      onChange={this.onChange}
+                                      readOnly
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+                                  <br />
+                                  <button
                                     type="submit"
                                     className="btn btn-primary btn-user btn-block"
+                                    style={{ fontSize: 15 }}
                                   >
-                                    Add New Item Part
+                                    Update Records
                                   </button>
                                 </form>
+
+                                <br />
+                                <button
+                                  type="submit"
+                                  className="btn btn-danger btn-user btn-block"
+                                  style={{
+                                    borderRadius: 25,
+                                    height: 40,
+                                    marginTop: -15,
+                                  }}
+                                  onClick={this.onDelete}
+                                >
+                                  Delete Records
+                                </button>
+
+                                <Link to="/get-all-purchased-items">
+                                  <button
+                                    type="submit"
+                                    className="btn btn-success btn-user btn-block"
+                                    style={{
+                                      borderRadius: 25,
+                                      height: 40,
+                                      marginTop: 10,
+                                    }}
+                                  >
+                                    Cancel
+                                  </button>
+                                </Link>
                                 <hr />
                               </div>
                             </div>
@@ -371,4 +493,4 @@ class AddStoreItem extends Component {
     );
   }
 }
-export default AddStoreItem;
+export default EditPurchaseItem;

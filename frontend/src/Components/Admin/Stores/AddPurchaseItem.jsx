@@ -135,6 +135,16 @@ class AddPurchaseItem extends Component {
               </div>
             </li>
             <br />
+            <li className="nav-item">
+              <div className="dropdown">
+                <Link to="/get-all-purchased-items">
+                  <button className="dropbtn">
+                    <i className="fa fa-bars" /> Purchased Items List
+                  </button>
+                </Link>
+              </div>
+            </li>
+            <br />
             </ul>
             
       
