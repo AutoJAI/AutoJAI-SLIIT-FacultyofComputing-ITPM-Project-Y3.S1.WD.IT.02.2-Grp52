@@ -262,7 +262,7 @@ class EditPurchaseItem extends Component {
                               className="col-lg-6 d-none d-lg-block"
                               style={{
                                 backgroundImage:
-                                  'url("../../../assets/images/store4.jpg")',
+                                  'url("../../../assets/images/store2.jpg")',
                               }}
                             />
                             <div className="col-lg-6">
