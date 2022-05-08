@@ -257,14 +257,19 @@ class AddStoreItem extends Component {
                                   </div>
                                   <div className="form-group">
                                     <label>Item Status</label>
-                                    <input
-                                      type="text"
-                                      required="required"
+                                    <select
+                                      className="form-control "
+                                      style={{ borderRadius: 25, height: 50 }}
                                       name="item_status"
                                       value={this.state.item_status}
                                       onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
+                                    >
+                                      <option>Select Type</option>
+                                      <option value="Brandnew">Brand New</option>
+                                      <option value="Used">
+                                        Used
+                                      </option>
+                                    </select>
                                   </div>
 
                                   <div className="form-group">
