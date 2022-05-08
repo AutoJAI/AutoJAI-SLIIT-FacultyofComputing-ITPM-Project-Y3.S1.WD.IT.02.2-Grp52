@@ -240,6 +240,7 @@ class AddPurchaseItem extends Component {
                                     <label>Purchased Item Name</label>
                                     <input
                                       type="text"
+                                      required="required"
                                       name="purchase_item_name"
                                       value={this.state.purchase_item_name}
                                       onChange={this.onChange}
@@ -250,6 +251,7 @@ class AddPurchaseItem extends Component {
                                     <label>Supplier</label>
                                     <input
                                       type="text"
+                                      required="required"
                                       name="supplier"
                                       value={this.state.supplier}
                                       onChange={this.onChange}
@@ -278,6 +280,7 @@ class AddPurchaseItem extends Component {
                                     <label>Added Date</label>
                                     <input
                                       type="date"
+                                      required="required"
                                       name="item_add_date"
                                       value={this.state.item_add_date}
                                       onChange={this.onChange}
@@ -289,6 +292,7 @@ class AddPurchaseItem extends Component {
                                     <label>Quantity</label>
                                     <input
                                       type="text"
+                                      required="required"
                                       name="item_qnty"
                                       value={this.state.item_qnty}
                                       onChange={this.onChange}
@@ -300,6 +304,7 @@ class AddPurchaseItem extends Component {
                                     <label>Purchased Price (Rs.)</label>
                                     <input
                                       type="text"
+                                      required="required"
                                       name="purchased_price"
                                       value={this.state.purchased_price}
                                       onChange={this.onChange}
