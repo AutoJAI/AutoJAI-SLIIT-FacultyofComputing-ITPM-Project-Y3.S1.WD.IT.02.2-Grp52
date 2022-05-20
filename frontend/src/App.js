@@ -22,6 +22,7 @@ import EditStoresItem from "./Components/Admin/Stores/EditStoresItem";
 import AddPurchaseItem from "./Components/Admin/Stores/AddPurchaseItem";
 import GetAllPurchasedItem from "./Components/Admin/Stores/GetAllPurchasedItem";
 import EditPurchaseItem from "./Components/Admin/Stores/EditPurchaseItem";
+import GetAllPurchasedItemReport from "./Components/Admin/Stores/GetAllPurchasedItemReport";
 
 
 function App() {
@@ -71,8 +72,8 @@ function App() {
            {/* Purchase Routes */}
            <Route path="/add-purchase-item" exact component={AddPurchaseItem} />
            <Route path="/get-all-purchased-items" exact component={GetAllPurchasedItem} />
-           <Route path="/edit-purchased-item/:id" exact component={EditPurchaseItem}
-          />
+           <Route path="/edit-purchased-item/:id" exact component={EditPurchaseItem}/>
+           <Route path="/get_purchased_items_report" exact component={GetAllPurchasedItemReport} />
           
         </Switch>
       </Router>
