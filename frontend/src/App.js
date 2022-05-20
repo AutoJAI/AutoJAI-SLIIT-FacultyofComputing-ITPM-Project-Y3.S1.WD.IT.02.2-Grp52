@@ -20,7 +20,9 @@ import EmployeeDash from "./Components/Admin/Employee/Employee";
 import AddEmployee from "./Components/Admin/Employee/AddEmployee";
 import GetAllEmployee from "./Components/Admin/Employee/GetAllEmployee";
 import EditEmployee from "./Components/Admin/Employee/EditEmployee";
-
+import AddSalary from "./Components/Admin/Employee/AddSalary";
+import GetAllEmployeeSalary from "./Components/Admin/Employee/GetAllEmployeeSalary";
+import GetAllEmployeePayeedSalary from "./Components/Admin/Employee/GetAllEmployeePayeedSalary";
 
 
 function App() {
@@ -73,7 +75,17 @@ function App() {
             exact
             component={EditEmployee}
             />
-         
+         <Route path="/add_emploee_salary/:id" exact component={AddSalary} />
+          <Route
+            path="/get_all_salary"
+            exact
+            component={GetAllEmployeeSalary}
+          />
+          <Route
+            path="/get_all_salary_pay"
+            exact
+            component={GetAllEmployeePayeedSalary}
+          />
           
         </Switch>
       </Router>

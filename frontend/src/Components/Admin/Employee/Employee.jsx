@@ -62,11 +62,27 @@ class EmployeeDash extends Component {
                 </Link>
               </div>
             </li>
-
             <br />
-           
-            
-            
+            <li className="nav-item">
+              <div className="dropdown">
+                <Link to="/get_all_salary">
+                  <button className="dropbtn">
+                    <i className="fa fa-bars" /> Salary List
+                  </button>
+                </Link>
+              </div>
+            </li>
+            <br />
+            <li className="nav-item">
+              <div className="dropdown">
+                <Link to="/get_all_salary_pay">
+                  <button className="dropbtn">
+                    <i className="fa fa-bars" /> Payeed List
+                  </button>
+                </Link>
+              </div>
+            </li>
+            <br />
           </ul>
          
           <div id="content-wrapper" className="d-flex flex-column">

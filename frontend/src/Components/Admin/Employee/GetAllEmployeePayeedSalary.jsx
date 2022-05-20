@@ -4,8 +4,9 @@ import axios from "axios";
 import { APIURL } from "../../API/environment";
 import User from "../../../assets/images/user.png";
 import Logo from "../../../assets/images/logo.png";
+import { toast } from "react-toastify";
 
-class GetAllEmployee extends Component {
+class GetAllEmployeePayeedSalary extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,11 +15,31 @@ class GetAllEmployee extends Component {
   }
 
   async componentDidMount() {
-    await axios.get(`${APIURL}/employee/get-all-employee`).then((response) => {
+    await axios.get(`${APIURL}/emp_sal/ge_all_salary`).then((response) => {
       this.setState({ employeeList: response.data.EmployeeList });
       console.log("EmployeeList =>", this.state.employeeList);
     });
   }
+
+  onPay(e, id) {
+    let updateDetailsStatus = {
+      isPay: 1,
+    };
+
+    console.log(id);
+    axios
+      .put(`${APIURL}/emp_sal/pay_salary/${id}`, updateDetailsStatus)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.code === 200) {
+          toast.success(res.data.message);
+          this.props.history.push("/get_all_salary");
+        } else {
+          toast.error(res.data.message);
+        }
+      });
+  }
+
   render() {
     return (
       <div>
@@ -78,6 +99,7 @@ class GetAllEmployee extends Component {
                 </Link>
               </div>
             </li>
+
             <br />
             <li className="nav-item">
               <div className="dropdown">
@@ -106,7 +128,9 @@ class GetAllEmployee extends Component {
             <div id="content">
               {/* Topbar */}
               <nav className="navbar navbar-expand topbar mb-4 static-top">
-                <h1 className="h3 mb-2 text-gray-800">All Employee List</h1>
+                <h1 className="h3 mb-2 text-gray-800">
+                  All Employee Salary Payeed List
+                </h1>
                 <ul className="navbar-nav ml-auto">
                   {/* Nav Item - User Information */}
                   <li className="nav-item dropdown no-arrow">
@@ -144,14 +168,14 @@ class GetAllEmployee extends Component {
                 </ul>
               </nav>
               <div className="container-fluid">
-                <p className="mb-4">All Emoloyees available in here.</p>
+                <p className="mb-4">
+                  All Employee Salary Payeed List available in here.
+                </p>
 
-                <br />
-                <br />
                 <div className="card shadow mb-4">
                   <div className="card-header py-3">
                     <h6 className="m-0 font-weight-bold text-primary">
-                      Check Employee Details
+                      Check Employee Salary Payeed Details
                     </h6>
                   </div>
                   <div className="card-body">
@@ -166,69 +190,72 @@ class GetAllEmployee extends Component {
                           <tr>
                             <th>Employee ID</th>
                             <th>Employee Name</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>Email Address</th>
-                            <th>Marital Status</th>
-                            <th>NIC Number</th>
-                            <th>Education </th>
-                            <th>Department </th>
                             <th>Post </th>
                             <th>Basic Salary </th>
-                            <th>Actions</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Working Days</th>
+                            <th>OT Hours</th>
+                            <th>EPF</th>
+                            <th>ETF </th>
+                            <th>Total Salary </th>
+                            <th>Status</th>
                           </tr>
                         </thead>
                         <tfoot>
                           <tr>
                             <th>Employee ID</th>
                             <th>Employee Name</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>Email Address</th>
-                            <th>Marital Status</th>
-                            <th>NIC Number</th>
-                            <th>Education </th>
-                            <th>Department </th>
                             <th>Post </th>
                             <th>Basic Salary </th>
-                            <th>Actions</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Working Days</th>
+                            <th>OT Hours</th>
+                            <th>EPF</th>
+                            <th>ETF </th>
+                            <th>Total Salary </th>
+                            <th>Status</th>
                           </tr>
                         </tfoot>
                         {this.state.employeeList.length > 0 &&
                           this.state.employeeList.map((item, index) => (
                             <tbody key={index}>
                               <tr>
-                                <td>{item.employee_id}</td>
-                                <td>{item.employee_name}</td>
-                                <td>{item.employee_address}</td>
-                                <td>{item.employee_phone}</td>
-                                <td>{item.employee_email}</td>
-                                <td>{item.employee_status}</td>
-                                <td>{item.employee_nic}</td>
-                                <td>{item.employee_education}</td>
-                                <td>{item.employee_department}</td>
-                                <td>{item.employee_post}</td>
-                                <td>{item.employee_basicSalary}</td>
-                                <td>
-                                  <Link
-                                    to={`/get-emploee-dtails-by-id/${item._id}`}
-                                  >
-                                    <button
-                                      className="btnEdit"
-                                      style={{ marginBottom: 10 }}
-                                    >
-                                      <i className="fas fa-edit" title="Edit" />
-                                    </button>
-                                  </Link>
-                                  <br />
-                                  <Link to={`/add_emploee_salary/${item._id}`}>
-                                    <button className="btnEdit">
-                                      <i className="fa fa-money" title="Edit" />
-                                    </button>
-                                  </Link>
-                                  
-                                  
-                                </td>
+                                {item.isPay === 1 && (
+                                  <>
+                                    <td>{item.employee_id}</td>
+                                    <td>{item.employee_name}</td>
+                                    <td>{item.employee_post}</td>
+                                    <td>{item.employee_basicSalary}</td>
+                                    <td>{item.employee_start_date}</td>
+                                    <td>{item.employee_end_date}</td>
+                                    <td>{item.employee_working_days}</td>
+                                    <td>{item.employee_ot}</td>
+                                    <td>{item.employee_epf}</td>
+                                    <td>{item.employee_etf}</td>
+                                    <td>{item.employee_totSal}</td>
+                                    <td>
+                                      <Link
+                                        onClick={(e) => {
+                                          {
+                                            this.onPay(e, item._id);
+                                          }
+                                        }}
+                                      >
+                                        <p
+                                          className="p-1 mb-1 text-success"
+                                          style={{
+                                            alignContent: "center",
+                                            textAlign: "center",
+                                          }}
+                                        >
+                                          Payeed
+                                        </p>
+                                      </Link>
+                                    </td>
+                                  </>
+                                )}
                               </tr>
                             </tbody>
                           ))}
@@ -244,7 +271,7 @@ class GetAllEmployee extends Component {
             <footer className="footer bg-white">
               <div className="container my-auto">
                 <div className="copyright text-center my-auto text-black ">
-                  <span>Copyright © JAI AUTO MART </span>
+                  <span>Copyright © HOTEL ROYAL RAMESSES </span>
                 </div>
               </div>
             </footer>
@@ -306,4 +333,4 @@ class GetAllEmployee extends Component {
     );
   }
 }
-export default GetAllEmployee;
+export default GetAllEmployeePayeedSalary;

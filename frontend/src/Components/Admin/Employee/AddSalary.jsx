@@ -9,18 +9,20 @@ import Logo from "../../../assets/images/logo.png";
 const initialState = {
   employee_id: "",
   employee_name: "",
-  employee_address: "",
-  employee_phone: "",
-  employee_email: "",
-  employee_status: "",
-  employee_nic: "",
-  employee_education: "",
   employee_department: "",
   employee_post: "",
-  employee_basicSalary: "",
+  employee_basicSalary: 0,
+  employee_epf: 0,
+  employee_etf: 0,
+  employee_allowances: 0,
+  employee_start_date: "",
+  employee_end_date: "",
+  employee_salary: 0,
+  employee_ot: 0,
+  employee_workingDays: 0,
 };
 
-class EditEmployee extends Component {
+class AddSalary extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +31,9 @@ class EditEmployee extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onDelete = this.onDelete.bind(this);
+    this.toggle_epf = this.toggle_epf.bind(this);
+    this.toggle_etf = this.toggle_etf.bind(this);
+    this.toggle_sal = this.toggle_sal.bind(this);
   }
 
   onChange(e) {
@@ -50,31 +54,13 @@ class EditEmployee extends Component {
           employee_name: this.state.employeeDetails.employee_name,
         });
         this.setState({
-          employee_address: this.state.employeeDetails.employee_address,
-        });
-        this.setState({
-          employee_phone: this.state.employeeDetails.employee_phone,
-        });
-        this.setState({
-          employee_email: this.state.employeeDetails.employee_email,
-        });
-        this.setState({
-          employee_status: this.state.employeeDetails.employee_status,
-        });
-        this.setState({
-          employee_nic: this.state.employeeDetails.employee_nic,
-        });
-        this.setState({
-          employee_education: this.state.employeeDetails.employee_education,
+          employee_basicSalary: this.state.employeeDetails.employee_basicSalary,
         });
         this.setState({
           employee_department: this.state.employeeDetails.employee_department,
         });
         this.setState({
           employee_post: this.state.employeeDetails.employee_post,
-        });
-        this.setState({
-          employee_basicSalary: this.state.employeeDetails.employee_basicSalary,
         });
       });
   }
@@ -83,53 +69,58 @@ class EditEmployee extends Component {
     event.preventDefault();
 
     let EmployeeDetails = {
+      employee_id: this.state.employee_id,
       employee_name: this.state.employee_name,
-      employee_address: this.state.employee_address,
-      employee_phone: this.state.employee_phone,
-      employee_email: this.state.employee_email,
-      employee_status: this.state.employee_status,
-      employee_nic: this.state.employee_nic,
-      employee_education: this.state.employee_education,
-      employee_department: this.state.employee_department,
+      employee_department: this.state.emd,
       employee_post: this.state.employee_post,
       employee_basicSalary: this.state.employee_basicSalary,
+      employee_epf: this.state.employee_epf,
+      employee_etf: this.state.employee_etf,
+      employee_totSal: this.state.employee_salary,
+      employee_ot: this.state.employee_ot,
+      employee_working_days: this.state.employee_workingDays,
+      employee_start_date: this.state.employee_start_date,
+      employee_end_date: this.state.employee_end_date,
     };
 
-    axios
-      .put(
-        `${APIURL}/employee/update-employee-details/${this.props.match.params.id}`,
-        EmployeeDetails
-      )
-      .then((res) => {
-        console.log("res", res);
+    axios.post(`${APIURL}/emp_sal/add_emp_sal`, EmployeeDetails).then((res) => {
+      console.log("res", res);
 
-        if (res.data.code === 200) {
-          toast.success(res.data.message);
-          this.props.history.push("/get-all-employee");
-        } else {
-          toast.error(res.data.message);
-        }
-      });
+      if (res.data.code === 200) {
+        toast.success(res.data.message);
+        this.props.history.push("/get-all-employee");
+      } else {
+        toast.error(res.data.message);
+      }
+    });
   }
 
-  onDelete(event) {
-    event.preventDefault();
-
-    axios
-      .delete(
-        `${APIURL}/employee/delete-employee-details/${this.props.match.params.id}`
-      )
-      .then((res) => {
-        console.log("res", res);
-        if (res.data.code === 200) {
-          toast.success(res.data.message);
-          this.props.history.push("/get-all-employee");
-        } else {
-          toast.error(res.data.message);
-        }
-      });
+  toggle_epf() {
+    this.setState({
+      employee_epf: (this.state.employee_basicSalary * 12) / 100,
+    });
   }
 
+  toggle_etf() {
+    this.setState({
+      employee_etf: (this.state.employee_basicSalary * 3) / 100,
+    });
+  }
+
+  toggle_sal() {
+    let ot = parseFloat((this.state.employee_basicSalary / 22 / 8) * 1.5);
+    console.log("ot", ot);
+    let salary = parseFloat(
+      this.state.employee_basicSalary + ot - this.state.employee_epf
+    );
+
+    let totSal = parseFloat(salary).toFixed(2);
+    console.log("salary", salary);
+
+    this.setState({
+      employee_salary: totSal,
+    });
+  }
   render() {
     return (
       <div>
@@ -216,7 +207,7 @@ class EditEmployee extends Component {
             <div id="content">
               <nav className="navbar navbar-expand topbar mb-4 static-top">
                 <h1 className="h3 mb-2 text-gray-800">
-                  Newly Employee Record Add
+                  Employee Salary Record Add
                 </h1>
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item dropdown no-arrow">
@@ -257,7 +248,7 @@ class EditEmployee extends Component {
               <div
                 className="container-fluid"
                 style={{
-                  backgroundImage: 'url("../../../assets/images/hotel1.jpg")',
+                  backgroundImage: 'url("../../../assets/images/MI13.jpg")',
                   backgroundRepeat: "no-repeat",
                   width: "100%",
                 }}
@@ -283,9 +274,9 @@ class EditEmployee extends Component {
                                     className="h4 text-gray-900 mb-4"
                                     style={{ fontStyle: "italic" }}
                                   >
-                                    Edit{" "}
+                                    Add{" "}
                                     {this.state.employeeDetails.employee_name}'s
-                                    Details
+                                    Salary
                                   </h1>
                                 </div>
                                 <form
@@ -314,86 +305,19 @@ class EditEmployee extends Component {
                                       value={this.state.employee_name}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <label>Address</label>
-                                    <input
-                                      type="text"
-                                      name="employee_address"
-                                      value={this.state.employee_address}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
+                                      readOnly
                                     />
                                   </div>
 
                                   <div className="form-group">
-                                    <label>Phone Number</label>
-                                    <input
-                                      type="text"
-                                      name="employee_phone"
-                                      value={this.state.employee_phone}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Email Address</label>
-                                    <input
-                                      type="text"
-                                      name="employee_email"
-                                      value={this.state.employee_email}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Marital Status</label>
-                                    <select
-                                      className="form-control "
-                                      style={{ borderRadius: 25, height: 50 }}
-                                      name="employee_status"
-                                      value={this.state.employee_status}
-                                      onChange={this.onChange}
-                                    >
-                                      <option>Select Marital Status</option>
-                                      <option value="Single">Single</option>
-                                      <option value="Married">Married</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>NIC Number</label>
-                                    <input
-                                      type="text"
-                                      name="employee_nic"
-                                      value={this.state.employee_nic}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Education Qualification</label>
-                                    <input
-                                      type="text"
-                                      name="employee_education"
-                                      value={this.state.employee_education}
-                                      onChange={this.onChange}
-                                      className="form-control form-control-user"
-                                    />
-                                  </div>
-
-                                  <div className="form-group">
-                                    <label>Assign Section</label>
+                                    <label>Assign Department</label>
                                     <input
                                       type="text"
                                       name="employee_department"
                                       value={this.state.employee_department}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
+                                      readOnly
                                     />
                                   </div>
 
@@ -405,41 +329,176 @@ class EditEmployee extends Component {
                                       value={this.state.employee_post}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
+                                      readOnly
                                     />
                                   </div>
 
                                   <div className="form-group">
-                                    <label>Basic Salary(Rs.)</label>
+                                    <label>Basic Salary</label>
                                     <input
                                       type="text"
                                       name="employee_basicSalary"
                                       value={this.state.employee_basicSalary}
                                       onChange={this.onChange}
                                       className="form-control form-control-user"
+                                      readOnly
                                     />
                                   </div>
 
+                                  <div className="form-group">
+                                    <label>Salary Start Date</label>
+                                    <input
+                                      type="date"
+                                      name="employee_start_date"
+                                      value={this.state.employee_start_date}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Salary End Date</label>
+                                    <input
+                                      type="date"
+                                      name="employee_end_date"
+                                      value={this.state.employee_end_date}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Working Days</label>
+                                    <input
+                                      type="number"
+                                      name="employee_workingDays"
+                                      value={this.state.employee_workingDays}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="form-group">
+                                    <label>Over Time Hours</label>
+                                    <input
+                                      type="text"
+                                      name="employee_ot"
+                                      value={this.state.employee_ot}
+                                      onChange={this.onChange}
+                                      className="form-control form-control-user"
+                                    />
+                                  </div>
+
+                                  <div className="row">
+                                    <div className="col-6">
+                                      <div className="form-group">
+                                        <label>EPF</label>
+                                        <input
+                                          type="text"
+                                          name="employee_epf"
+                                          value={this.state.employee_epf}
+                                          onChange={this.onChange}
+                                          className="form-control form-control-user"
+                                          readOnly
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-6">
+                                      <div className="form-group">
+                                        <span
+                                          type="submit"
+                                          className="btn btn-primary submit"
+                                          onClick={this.toggle_epf}
+                                          style={{
+                                            width: 150,
+                                            height: 40,
+                                            color: "white",
+                                            marginTop: 35,
+                                          }}
+                                        >
+                                          Calculate EPF
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="row">
+                                    <div className="col-6">
+                                      <div className="form-group">
+                                        <label>ETF</label>
+                                        <input
+                                          type="text"
+                                          name="employee_etf"
+                                          value={this.state.employee_etf}
+                                          onChange={this.onChange}
+                                          className="form-control form-control-user"
+                                          readOnly
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-6">
+                                      <div className="form-group">
+                                        <span
+                                          type="submit"
+                                          className="btn btn-primary submit"
+                                          onClick={this.toggle_etf}
+                                          style={{
+                                            width: 150,
+                                            height: 40,
+                                            color: "white",
+                                            marginTop: 35,
+                                          }}
+                                        >
+                                          Calculate ETF
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="row">
+                                    <div className="col-6">
+                                      <div className="form-group">
+                                        <label>Total Salary</label>
+                                        <input
+                                          type="text"
+                                          name="employee_salary"
+                                          value={this.state.employee_salary}
+                                          onChange={this.onChange}
+                                          className="form-control form-control-user"
+                                          readOnly
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="col-6">
+                                      <div className="form-group">
+                                        <span
+                                          type="submit"
+                                          className="btn btn-primary submit"
+                                          onClick={this.toggle_sal}
+                                          style={{
+                                            width: 150,
+                                            height: 40,
+                                            color: "white",
+                                            marginTop: 35,
+                                          }}
+                                        >
+                                          Calculate Salary
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <br />
                                   <button
                                     type="submit"
                                     className="btn btn-primary btn-user btn-block"
+                                    style={{ fontSize: 15, height: 40 }}
                                   >
-                                    Update Records
+                                    Add Salary
                                   </button>
                                 </form>
-
-                                <br />
-                                <button
-                                  type="submit"
-                                  className="btn btn-danger btn-user btn-block"
-                                  style={{
-                                    borderRadius: 25,
-                                    height: 40,
-                                    marginTop: -15,
-                                  }}
-                                  onClick={this.onDelete}
-                                >
-                                  Delete Records
-                                </button>
 
                                 <Link to="/get-all-employee">
                                   <button
@@ -448,7 +507,7 @@ class EditEmployee extends Component {
                                     style={{
                                       borderRadius: 25,
                                       height: 40,
-                                      marginTop: 10,
+                                      marginTop: 5,
                                     }}
                                   >
                                     Cancel
@@ -468,7 +527,7 @@ class EditEmployee extends Component {
             <footer className="footer bg-white">
               <div className="container my-auto">
                 <div className="copyright text-center my-auto text-black ">
-                  <span>Copyright © JAI AUTO MART </span>
+                  <span>Copyright © HOTEL ROYAL RAMESSES </span>
                 </div>
               </div>
             </footer>
@@ -526,4 +585,4 @@ class EditEmployee extends Component {
     );
   }
 }
-export default EditEmployee;
+export default AddSalary;
