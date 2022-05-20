@@ -4,9 +4,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Home from "./Components/Common/Home";
-
+import HomeLogin from "./Components/Common/HomeLogin";
 import Login from "./Components/Common/Login";
+import Register from "./Components/Common/Register";
 import ActivationEmail from "./Components/Common/ActivationEmail";
+import MyAccount from "./Components/Common/MyAccount";
 
 import StoresDash from "./Components/Admin/Stores/Stores";
 import AddStoreItem from "./Components/Admin/Stores/AddStoreItem";
@@ -37,13 +39,15 @@ function App() {
       <Router>
         <Switch>
           <Route path="/" exact component={Home} />
-         
+          <Route path="/customer-home" exact component={HomeLogin} />
           <Route path="/login" exact component={Login} />
+          <Route path="/register" exact component={Register} />
           <Route
             path="/customer/activate/:activation_token"
             component={ActivationEmail}
             exact
           />
+          <Route path="/my-account" exact component={MyAccount} />
            
           
 

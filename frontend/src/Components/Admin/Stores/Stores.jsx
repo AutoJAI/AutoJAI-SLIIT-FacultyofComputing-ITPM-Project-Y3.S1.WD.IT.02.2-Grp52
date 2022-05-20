@@ -94,7 +94,7 @@ class StoresDash extends Component {
             </div>
           </li>
           <br />
-            </ul>
+          </ul>
       
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">

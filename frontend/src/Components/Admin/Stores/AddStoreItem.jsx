@@ -53,7 +53,7 @@ class AddStoreItem extends Component {
         if (res.data.code === 200) {
           toast.success(res.data.message);
           window.location.reload();
-          //this.props.history.push("/get-all-food-menu");
+         
         } else {
           toast.error(res.data.message);
         }

@@ -156,7 +156,7 @@ class GetAllPurchasedItem extends Component {
                 </ul>
               </nav>
               <div className="container-fluid">
-                <p className="mb-4">All Purchased Item available in here.</p>
+                <p className="mb-4">All Purchased Items available in here.</p>
 
                 <br />
                 <br />
